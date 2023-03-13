@@ -1,4 +1,4 @@
-import RouterTransition from '@/components/RouterTransition';
+import { RouterTransition } from '@/components';
 import { MantineProvider } from '@mantine/core';
 import type { AppProps } from 'next/app';
 
