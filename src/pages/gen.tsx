@@ -9,6 +9,7 @@ import {
   Divider,
   MultiSelect,
   Paper,
+  ScrollArea,
   Stack,
   Text,
   TextInput,
@@ -25,7 +26,8 @@ const TokenGen = () => {
 
   const [result, setResult] = useState<string | null>(null);
 
-  const clipboard = useClipboard({ timeout: 500 });
+  const clipboard1 = useClipboard({ timeout: 500 });
+  const clipboard2 = useClipboard({ timeout: 500 });
   const form = useForm({
     initialValues: {
       response_type: 'code',
@@ -70,22 +72,25 @@ const TokenGen = () => {
     router.push(url.toString());
   };
   const onCodeCheck = async (values: typeof formForCode.values) => {
-    const res = await axios.get<RefreshToken>(
+    const res = await axios.post<RefreshToken>(
       'https://accounts.spotify.com/api/token',
       {
-        params: {
-          client_id: values.client_id,
-          client_secret: values.client_secret,
-          redirect_uri: values.redirect_uri,
+        client_id: values.client_id,
+        client_secret: values.client_secret,
+        redirect_uri: values.redirect_uri,
 
-          grant_type: 'authorization_code',
-          code: router.query.code,
+        grant_type: 'authorization_code',
+        code: router.query.code,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
       },
     );
 
     if (res.status === 200) {
-      setResult(JSON.stringify(res.data));
+      setResult(JSON.stringify(res.data, null, 2));
     }
   };
 
@@ -112,16 +117,28 @@ const TokenGen = () => {
               <Stack>
                 <Text>Redirect Code</Text>
                 <Button
-                  color={clipboard.copied ? 'teal' : 'blue'}
-                  onClick={() => clipboard.copy('Hello, world!')}
+                  color={clipboard1.copied ? 'teal' : 'blue'}
+                  onClick={() => clipboard1.copy('Hello, world!')}
                 >
-                  Copy Code
+                  Copy redirected code from URL
                 </Button>
 
                 {result !== null ? (
                   <>
                     <Divider mt="sm" />
-                    <Code color="teal">{result}</Code>
+                    <ScrollArea w={360}>
+                      <Code color="teal" block>
+                        {result}
+                      </Code>
+                    </ScrollArea>
+                    <Button
+                      color={clipboard2.copied ? 'teal' : 'blue'}
+                      onClick={() =>
+                        clipboard2.copy(JSON.stringify(JSON.parse(result)))
+                      }
+                    >
+                      Copy refresh token response
+                    </Button>
                   </>
                 ) : null}
               </Stack>
