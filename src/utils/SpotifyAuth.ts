@@ -5,7 +5,7 @@ import faunadb, { query as q } from 'faunadb';
 const tokenValid = (token: ClientCredentials) =>
   Date.now() < token.created + token.expires_in;
 
-const { CLIENT_ID, CLIENT_SECRET, REDIRECT_TOKEN } = process.env;
+const { CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN } = process.env;
 const COLLECTION_NAME = 'token';
 
 export class SpotifyAuth {
@@ -84,7 +84,7 @@ export class SpotifyAuth {
     try {
       const params = {
         grant_type: 'refresh_token',
-        refresh_token: String(REDIRECT_TOKEN),
+        refresh_token: String(REFRESH_TOKEN),
       };
 
       const config = {
@@ -92,6 +92,7 @@ export class SpotifyAuth {
           Authorization: `Basic ${Buffer.from(
             `${CLIENT_ID}:${CLIENT_SECRET}`,
           ).toString('base64')}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
       };
 
