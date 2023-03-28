@@ -13,6 +13,10 @@ export type AccessToken = {
   expires_in: number;
 };
 
+export type RefreshToken = AccessToken & {
+  refresh_token: string;
+};
+
 export type ClientCredentials = {
   access_token: string;
   expires_in: number;
