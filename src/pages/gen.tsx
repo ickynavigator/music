@@ -1,4 +1,5 @@
 import { RefreshToken } from '@/types';
+import { scopes } from '@/utils';
 import {
   Anchor,
   Button,
@@ -6,13 +7,14 @@ import {
   Code,
   Container,
   Divider,
+  MultiSelect,
   Paper,
   Stack,
   Text,
   TextInput,
   Title,
 } from '@mantine/core';
-import { isNotEmpty, useForm } from '@mantine/form';
+import { isNotEmpty, TransformedValues, useForm } from '@mantine/form';
 import { useClipboard } from '@mantine/hooks';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -28,7 +30,7 @@ const TokenGen = () => {
     initialValues: {
       response_type: 'code',
       client_id: '',
-      scope: '',
+      scope: [''],
       redirect_uri: '',
     },
 
@@ -38,6 +40,11 @@ const TokenGen = () => {
       scope: isNotEmpty('Scopes are required'),
       redirect_uri: isNotEmpty('Redirect URI is necessary'),
     },
+
+    transformValues: values => ({
+      ...values,
+      scope: values.scope.join(','),
+    }),
   });
   const formForCode = useForm({
     initialValues: {
@@ -53,7 +60,7 @@ const TokenGen = () => {
     },
   });
 
-  const onSubmit = async (values: typeof form.values) => {
+  const onSubmit = async (values: TransformedValues<typeof form>) => {
     const url = new URL('https://accounts.spotify.com/authorize');
     url.searchParams.append('response_type', values.response_type);
     url.searchParams.append('client_id', values.client_id);
@@ -154,6 +161,7 @@ const TokenGen = () => {
                 label="Response Type"
                 placeholder=""
                 withAsterisk
+                readOnly
                 {...form.getInputProps('response_type')}
               />
               <TextInput
@@ -168,10 +176,12 @@ const TokenGen = () => {
                 withAsterisk
                 {...form.getInputProps('redirect_uri')}
               />
-              <TextInput
+              <MultiSelect
                 label="Scope"
                 placeholder=""
                 withAsterisk
+                data={scopes}
+                clearable
                 {...form.getInputProps('scope')}
               />
               <Button fullWidth mt="xl" type="submit">
