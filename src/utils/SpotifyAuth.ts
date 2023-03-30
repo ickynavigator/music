@@ -10,7 +10,7 @@ const COLLECTION_NAME = 'token';
 
 export class SpotifyAuth {
   faunaClient: faunadb.Client;
-  public token: ClientCredentials | null = null;
+  token: ClientCredentials | null = null;
 
   constructor() {
     this.faunaClient = new faunadb.Client({
