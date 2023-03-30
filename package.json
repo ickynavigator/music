@@ -19,7 +19,8 @@
     "faunadb": "^4.8.0",
     "next": "13.2.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "spotify-web-api-js": "^1.5.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
