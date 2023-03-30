@@ -11,7 +11,11 @@ export default async function handler(
 
   switch (req.method) {
     case 'GET': {
-      return res.status(200).json(auth.token);
+      if (auth.token !== null) {
+        return res.status(200).json(auth.token.access_token);
+      } else {
+        return res.status(500).json('null');
+      }
     }
 
     default: {
