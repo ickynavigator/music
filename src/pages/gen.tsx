@@ -15,7 +15,7 @@ import {
   TextInput,
   Title,
 } from '@mantine/core';
-import { isNotEmpty, TransformedValues, useForm } from '@mantine/form';
+import { TransformedValues, isNotEmpty, useForm } from '@mantine/form';
 import { useClipboard } from '@mantine/hooks';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -118,7 +118,7 @@ const TokenGen = () => {
                 <Text>Redirect Code</Text>
                 <Button
                   color={clipboard1.copied ? 'teal' : 'blue'}
-                  onClick={() => clipboard1.copy('Hello, world!')}
+                  onClick={() => clipboard1.copy(router.query.code as string)}
                 >
                   Copy redirected code from URL
                 </Button>
